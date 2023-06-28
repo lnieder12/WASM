@@ -1,33 +1,49 @@
 ﻿@using StarWars.Model
+@using RCL
+@using WASM.Services
 @page "/game/{id:int}"
-@inject HttpClient http
+@inject GameService Service
+@if (_game is { Soldiers.Count: > 0 })
+{
+
 <h3>Game #@_game?.Id</h3>
 
 <p>Soldiers: </p>
-<div style="height: 500px; overflow-y: scroll">
-    @if (_game is {Soldiers.Count: > 0 })
-    {
-        @foreach (var gs in _game.Soldiers)
-        {
-            <p>
-                <a href="soldier/@gs.Soldier.Id">@gs.Soldier.Name</a>
-            </p>
-        }
-    }
-</div>
+    <TableTemplate Items="_game.Soldiers" Context="gs">
+        <TableHeader>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Max health</th>
+            <th>Attack</th>
+        </TableHeader>
+        <RowTemplate>
+            <td><a href="soldier/@gs.Soldier.Id">@gs.Soldier.Id</a></td>
+            <td>@gs.Soldier.Name</td>
+            <td>@gs.Soldier.MaxHealth</td>
+            <td>@gs.Soldier.Attack</td>
+        </RowTemplate>
+    </TableTemplate>
     
 <p>Rounds: @_game?.Rounds.Count</p>
 <p>MaxRound: @_game?.MaxRound</p>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
     private Game? _game = new();
+    private bool _shouldRender;
+
+    protected override bool ShouldRender() => _shouldRender;
 
     protected override async Task OnInitializedAsync()
     {
-        _game = await http.GetFromJsonAsync<Game>("/game/" + Id);
+        _game = await Service.Get(Id);
+        _shouldRender = true;
     }
-
 }

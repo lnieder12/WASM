@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="RCL">
+      <HintPath>..\RCL\bin\Debug\net7.0\RCL.dll</HintPath>
+    </Reference>
     <Reference Include="StarWars.Model">
       <HintPath>..\StarWarsApi\StarWars.Model\bin\Debug\net7.0\StarWars.Model.dll</HintPath>
     </Reference>

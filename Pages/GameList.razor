@@ -1,27 +1,41 @@
 ﻿@using StarWars.Model
+@using RCL
+@using WASM.Services
 @page "/game"
-@inject IConfiguration config
-@inject HttpClient http
+@inject GameService Service
 <h3>Games</h3>
 
-@{
-    System.Diagnostics.Debug.Assert(_games != null, nameof(_games) + " != null");
-}
-<PageTitle>Games</PageTitle>
-@foreach (var game in _games)
-{
-    <p>
-        <a href="/game/@game.Id">Game #@game.Id</a>
-    </p>
-}
 
+<PageTitle>Games</PageTitle>
+
+
+@if (_games is not null && _games.Count > 0)
+{
+    <TableTemplate Items="_games" Context="game">
+        <TableHeader>
+            <th>Id</th>
+            <th>Soldiers</th>
+            <th>Rounds</th>
+            <th>MaxRound</th>
+        </TableHeader>
+        <RowTemplate>
+            <td><a href="/game/@game.Id">@game.Id</a></td>
+            <td>@game.Soldiers.Count</td>
+            <td>@game.Rounds.Count</td>
+            <td>@game.MaxRound</td>
+        </RowTemplate>
+    </TableTemplate>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
 @code {
     private List<Game>? _games = new();
-    private List<Soldier>? _soldiers = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _games = await http.GetFromJsonAsync<List<Game>>("/game");
+        _games = await Service.GetAll();
     }
 
 }
