@@ -1,0 +1,22 @@
+﻿@using StarWars.Model
+@page "/soldier/{id:int}"
+@inject HttpClient Http
+<PageTitle>Soldier</PageTitle>
+<h3>Soldier @_soldier?.Name</h3>
+
+<p>Attack : @_soldier?.Attack</p>
+<p>Max health : @_soldier?.MaxHealth</p>
+<p>Faction : @_soldier?.SoldierType</p>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Soldier? _soldier = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _soldier = await Http.GetFromJsonAsync<Soldier>("/soldier/" + Id);
+    }
+}

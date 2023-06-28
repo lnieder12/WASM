@@ -1,0 +1,33 @@
+﻿@using StarWars.Model
+@page "/game/{id:int}"
+@inject HttpClient http
+<h3>Game #@_game?.Id</h3>
+
+<p>Soldiers: </p>
+<div style="height: 500px; overflow-y: scroll">
+    @if (_game is {Soldiers.Count: > 0 })
+    {
+        @foreach (var gs in _game.Soldiers)
+        {
+            <p>
+                <a href="soldier/@gs.Soldier.Id">@gs.Soldier.Name</a>
+            </p>
+        }
+    }
+</div>
+    
+<p>Rounds: @_game?.Rounds.Count</p>
+<p>MaxRound: @_game?.MaxRound</p>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Game? _game = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _game = await http.GetFromJsonAsync<Game>("/game/" + Id);
+    }
+
+}

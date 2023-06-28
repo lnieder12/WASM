@@ -1,0 +1,27 @@
+﻿@using StarWars.Model
+@page "/game"
+@inject IConfiguration config
+@inject HttpClient http
+<h3>Games</h3>
+
+@{
+    System.Diagnostics.Debug.Assert(_games != null, nameof(_games) + " != null");
+}
+<PageTitle>Games</PageTitle>
+@foreach (var game in _games)
+{
+    <p>
+        <a href="/game/@game.Id">Game #@game.Id</a>
+    </p>
+}
+
+@code {
+    private List<Game>? _games = new();
+    private List<Soldier>? _soldiers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _games = await http.GetFromJsonAsync<List<Game>>("/game");
+    }
+
+}
