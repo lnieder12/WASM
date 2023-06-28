@@ -1,0 +1,27 @@
+﻿@using StarWars.Model
+@using WASM.Services
+@inject GameService Service
+
+<div class="card"></div>
+@if (Round is not null)
+{
+    <p>Attacker : @Round?.Attacker.Name</p>
+    <p>Defender : @Round?.Defender.Name</p>
+    <p>Hp left : @Round?.HpLeft</p>
+}
+
+<button class="btn btn-dark" @onclick="FightAsync">Fight</button>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private Round? Round { get; set; }
+
+
+    public async Task FightAsync()
+    {
+        Round = await Service.Fight(Id);
+    }
+
+}

@@ -14,12 +14,19 @@ namespace WASM.Services
 
         public Task<Game?> Get(int id)
         {
-            return _httpClient.GetFromJsonAsync<Game>("/game/" + id);
+            // Méthode proposé par Microsoft pour Blazor WASM
+            // Applicable aussi pour Blazor Server
+            return _httpClient.GetFromJsonAsync<Game>($"/game/{id}");
         }
 
         public Task<List<Game>?> GetAll()
         {
             return _httpClient.GetFromJsonAsync<List<Game>>("/game");
+        }
+
+        public Task<Round?> Fight(int id)
+        {
+            return _httpClient.GetFromJsonAsync<Round>($"/game/{id}/fight");
         }
     }
 }
